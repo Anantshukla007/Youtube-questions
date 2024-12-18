@@ -1,0 +1,44 @@
+class Solution {
+public:
+
+    void dfs(int u, unordered_map<int,vector<int>>& adj, vector<bool>& visited){
+        visited[u]=true;
+        for(int v:adj[u]){
+            if(visited[v]!=true){
+                dfs(v,adj,visited);
+            }
+        }
+    }
+    vector<vector<int>> getAncestors(int n, vector<vector<int>>& edges) {
+
+        vector<vector<int>>result;
+        unordered_map<int,vector<int>>adj;
+        for(vector<int>& vec:edges){
+            int u=vec[0];
+            int v=vec[1];
+            adj[v].push_back(u);
+        }
+
+        for(int u=0;u<n;u++){
+            vector<int>anc;
+            vector<bool>visited(n,false);
+            dfs(u,adj,visited);
+
+
+            for(int i=0;i<n;i++){
+                if(i==u)continue;
+
+                if(visited[i]==true){
+                    anc.push_back(i);
+                }
+            }
+            result.push_back(anc);
+        }
+        return result;
+        
+        
+        
+    }
+};
+
+//O(n*(n+m))
