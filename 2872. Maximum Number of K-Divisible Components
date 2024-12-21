@@ -1,0 +1,43 @@
+class Solution {
+public:
+    int count = 0; // Counter to keep track of the number of valid k-divisible components.
+
+    // Depth First Search (DFS) function to compute the sum of values in each component.
+    long dfs(int i, vector<vector<int>>& graph, vector<int>& vis, vector<int>& val, int k) {
+        vis[i] = 1; // Mark the current node as visited.
+        long sum = 0; // Initialize the sum for the current component.
+
+        // Traverse all connected nodes.
+        for (auto x : graph[i]) {
+            if (!vis[x]) { // If the node is not visited, perform DFS.
+                sum += dfs(x, graph, vis, val, k);
+            }
+        }
+
+        sum += val[i]; // Add the value of the current node to the sum.
+
+        // Check if the sum of this component is divisible by k.
+        if (sum % k == 0) {
+            count++; // Increment the count for a valid component.
+            return 0; // Return 0 as this component is fully divisible by k.
+        }
+        return sum; // Return the remaining sum if not divisible.
+    }
+
+    // Function to calculate the maximum number of k-divisible components in the tree.
+    int maxKDivisibleComponents(int n, vector<vector<int>>& edges, vector<int>& values, int k) {
+        vector<vector<int>> graph(n); // Adjacency list representation of the tree.
+        vector<int> vis(n, 0); // Visited array to track visited nodes.
+
+        // Build the graph from the given edges.
+        for (auto i : edges) {
+            graph[i[0]].push_back(i[1]);
+            graph[i[1]].push_back(i[0]);
+        }
+
+        // Start DFS from the root node (0).
+        dfs(0, graph, vis, values, k);
+
+        return count; // Return the total number of k-divisible components.
+    }
+};
